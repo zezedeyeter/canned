@@ -1,0 +1,75 @@
+{
+  "name": "zeze-canned",
+  "version": "1.0.0",
+  "description": "Sistem genelinde çalışan metin genişletici masaüstü uygulaması",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "rebuild": "npx @electron/rebuild -f -w uiohook-napi",
+    "build": "npx @electron/packager . ZezeCanned --platform=win32 --arch=x64 --icon=build/icon.ico --out=dist --overwrite --asar --extra-resource=snippets.json --extra-resource=build/default-profile.jpg",
+    "setup": "npx electron-builder --win nsis",
+    "setup:squirrel": "node scripts/build-installer-squirrel.js"
+  },
+  "build": {
+    "appId": "com.zeze.canned",
+    "productName": "ZezeCanned",
+    "electronVersion": "41.2.0",
+    "directories": {
+      "output": "dist-installer-nsis"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "snippets.json",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "snippets.json",
+        "to": "snippets.json"
+      },
+      {
+        "from": "build/default-profile.jpg",
+        "to": "default-profile.jpg"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": false,
+      "deleteAppDataOnUninstall": true
+    }
+  },
+  "keywords": [
+    "text-expander",
+    "snippets",
+    "electron"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@electron/packager": "^18.3.6",
+    "@electron/rebuild": "^3.7.2",
+    "electron": "^41.2.0",
+    "electron-builder": "^26.8.1",
+    "electron-winstaller": "^5.4.0"
+  },
+  "dependencies": {
+    "uiohook-napi": "^1.5.5"
+  }
+}
