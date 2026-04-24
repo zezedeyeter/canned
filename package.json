@@ -6,54 +6,15 @@
   "scripts": {
     "start": "electron .",
     "rebuild": "npx @electron/rebuild -f -w uiohook-napi",
-    "build": "npx @electron/packager . ZezeCanned --platform=win32 --arch=x64 --icon=build/icon.ico --out=dist --overwrite --asar --extra-resource=snippets.json --extra-resource=build/default-profile.jpg",
-    "setup": "npx electron-builder --win nsis",
+    "build": "node scripts/ensure-app-icon.js && node scripts/ensure-default-profile.js && node scripts/ensure-snippets-file.js && npx @electron/rebuild -f -w uiohook-napi && npx @electron/packager . ZezeCanned --platform=win32 --arch=x64 --icon=build/icon.ico --out=dist --overwrite --asar --extra-resource=snippets.json --extra-resource=build/default-profile.jpg --extra-resource=scripts/raw-keyboard-helper.ps1",
+    "dist:exe": "npm run build && npm run setup:squirrel && node scripts/copy-setup-to-root.js",
+    "setup": "npm run dist:exe",
     "setup:squirrel": "node scripts/build-installer-squirrel.js"
   },
   "build": {
     "appId": "com.zeze.canned",
     "productName": "ZezeCanned",
-    "electronVersion": "41.2.0",
-    "directories": {
-      "output": "dist-installer-nsis"
-    },
-    "files": [
-      "main.js",
-      "preload.js",
-      "src/**/*",
-      "snippets.json",
-      "node_modules/**/*"
-    ],
-    "extraResources": [
-      {
-        "from": "snippets.json",
-        "to": "snippets.json"
-      },
-      {
-        "from": "build/default-profile.jpg",
-        "to": "default-profile.jpg"
-      }
-    ],
-    "win": {
-      "icon": "build/icon.ico",
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "runAfterFinish": false,
-      "deleteAppDataOnUninstall": true
-    }
+    "electronVersion": "41.2.0"
   },
   "keywords": [
     "text-expander",
